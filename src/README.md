@@ -32,19 +32,18 @@ A super simple FastAPI application that allows students to view and sign up for 
 | GET    | `/activities`                                                     | Get all activities with their details and current participant count |
 | POST   | `/activities/{activity_name}/signup?email=student@mergington.edu` | Sign up for an activity                                             |
 
-## Data Model
+## Data and storage
 
-The application uses a simple data model with meaningful identifiers:
+The application stores activities and student signups in a SQLite database.
+By default, the database is `src/activities.db`; set `DATABASE_PATH` to use a
+different location. The database is created and initialized when the server
+starts.
 
-1. **Activities** - Uses activity name as identifier:
+On the first start with an empty database, sample activities and their initial
+participants are loaded from `src/activities.json`. That file is only a seed
+for a fresh database: after initialization, the SQLite database is the source
+of truth, so restarting the server does not overwrite signups or activity
+records. Back up the database file to preserve local data.
 
-   - Description
-   - Schedule
-   - Maximum number of participants allowed
-   - List of student emails who are signed up
-
-2. **Students** - Uses email as identifier:
-   - Name
-   - Grade level
-
-All data is stored in memory, which means data will be reset when the server restarts.
+Each signup has an approval status. Signups made through the current API are
+approved immediately, preserving the existing registration behavior.
